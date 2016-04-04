@@ -2,6 +2,8 @@ import numpy
 import scipy.misc
 import gzip
 import cPickle# as pickle
+from collections import OrderedDict
+
 
 import theano
 import theano.tensor as T
@@ -90,7 +92,7 @@ class adam:
             updates[param] = (param - (lr * (new_last_1_moment / (1 - self.b1**t)) /
                                       (T.sqrt(new_last_2_moment / (1 - self.b2**t)) + self.eps)))
 
-        return updates
+        return updates.items()
 
 
 class SharedGenerator:
@@ -145,8 +147,12 @@ class SharedGenerator:
         self.param_costs[name].append(cost)
     def get_costs(self, name):
         return self.param_costs[name]
-    def get_all_cost(self):
-        return [self.param_costs[i] for i in self.param_costs]
+    def get_all_costs(self):
+        return [j  for i in self.param_costs for j in self.param_costs[i]]
+    def get_all_names(self):
+        print [i for i in self.param_costs]
+        print self.param_costs.keys()
+        return self.param_costs.keys()
 
     def computeUpdates(self, lr, gradient_method=gradient_descent):
         updates = []
@@ -186,14 +192,15 @@ class ConvBatchNormalization:
 
 class HiddenLayer:
     def __init__(self, n_in, n_out, activation, init="bengio", canReconstruct=False,
-                 inputDropout=None):
-        self.W = shared("W", (n_in, n_out), init, inputDropout=inputDropout)
-        self.b = shared("b", (n_out,), "zero")
+                 inputDropout=None,name=""):
+        self.W = shared("W"+name, (n_in, n_out), init, inputDropout=inputDropout)
+        self.b = shared("b"+name, (n_out,), "zero")
         self.activation = activation
         self.params = [self.W, self.b]
         if canReconstruct:
-            self.bprime = shared("b'", (n_in,), "zero")
+            self.bprime = shared("b'"+name, (n_in,), "zero")
             self.params+= [self.bprime]
+        self.name=name
     def orthonormalize(self):
         import numpy.linalg
         from scipy.linalg import sqrtm, inv
@@ -370,7 +377,6 @@ class StackModel:
     def __call__(self, *x, **kw):
         activations = kw.get('activations', None)
         upto = kw.get('upto', len(self.layers))
-        print "upto",upto
 
         for i,l in enumerate(self.layers[:upto]):
             x = l(*x)

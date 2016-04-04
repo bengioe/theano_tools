@@ -22,7 +22,7 @@ class Environment:
             s = self.state
 
         ntiles = self.tiling
-        p = numpy.zeros((ntiles*ntiles))
+        p = numpy.zeros((ntiles*ntiles), dtype='float32')
         p[int(self.state[0]+10)] = 1
         return numpy.float32(p)
         
@@ -44,10 +44,10 @@ class Ball2D:
         self.y = y
         self.r = radius
         if t:
-            color = [0,1,0]
+            color = [0,1,0,0]
             reward = 1
         else:
-            color = [0,0,1]
+            color = [0,0,1,0]
             reward = -1
         self.color = color
         self.isSolid = False
@@ -93,7 +93,7 @@ class Wall2D:
         self.p = [x0,y0,x1,y1]
         self.length = np.sqrt((x1-x0)**2 + (y1-y0)**2)
         self.ray = [x0,y0, (x1-x0)/self.length, (y1-y0)/self.length]#[y1-y0, x1-x0, (x0-x1)*y0 + (y1-y0)*x0,   x0, y0]
-        self.color = [1,0,0]
+        self.color = [1,0,0,0]
         self.isSolid = True
 
     def distanceToRay(self, ray):
@@ -168,7 +168,7 @@ class BallAgent:
       
 class Void:
     def __init__(self):
-        self.color = [0,0,0]
+        self.color = [0,0,0,1]
 
 class BallWorld:
     def __init__(self):
@@ -178,9 +178,10 @@ class BallWorld:
         self.void = Void()
         self.actions = ['l','r','f']
         #self.actions = ['l','r']
-        self.angles = [i*pi/12 for i in range(-3,4)]
+        self.angles = [i*pi/24 for i in range(-5,6)]
+        #self.angles = [i*pi/24 for i in range(0,1)]
         print self.angles
-        self.nfeatures = 4*len(self.angles)
+        self.nfeatures = 5*len(self.angles)
         self.lastMinray = 10
         self.r = lambda: np.random.uniform(1,19)
     def startEpisode(self,randomStart=False):
@@ -210,7 +211,7 @@ class BallWorld:
             data += [minDist]+minObj.color
             minDists.append(minDist)
         self.lastMinray = minDists
-        return np.array(data)
+        return np.float32(data)
         
     def isEpisodeOver(self):
         return False
