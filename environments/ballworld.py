@@ -137,13 +137,13 @@ class BallAgent:
         ray = self.getRay()
         newpos = [ray[0] + ray[2] * q, ray[1] + ray[3] * q]
         b = Ball2D(newpos[0], newpos[1], 1)
-        r = 0
+        r = -0.1
         balls = []
         for o in self.world.objects:
             if o == self: continue
             if o.intersectsBall(b):
                 if o.isSolid:
-                    return [-0.5,[]]
+                    return [r,[]]
                 else: # we touched a reward ball!
                     r += o.reward
                     #print b,"intersect",o
@@ -187,17 +187,19 @@ class BallWorld:
     def startEpisode(self,randomStart=False):
         self.objects = [Wall2D(0,0,20,0),Wall2D(0,0,0,20),
                         Wall2D(0,20,20,20),Wall2D(20,0,20,20)]
-        self.objects += [Ball2D(self.r(),self.r(), True) for i in range(25)]
-        self.objects += [Ball2D(self.r(),self.r(), False) for i in range(25)]
+        #self.objects += [Ball2D(self.r(),self.r(), True) for i in range(5)]
+        self.objects += [Ball2D(i*2,i*2, True) for i in range(5)]
+        #self.objects += [Ball2D(self.r(),self.r(), False) for i in range(25)]
 
         
         self.agent = BallAgent(self.r(),self.r(),self)
+        self.agent.orientation = np.random.uniform(0,2*3.14)
 
-    def toRepr(self):
+    def toRepr(self, maxDist = 20.):
         minDists = []
         data = []
         for theta in self.angles:
-            minDist = 7 # is maximum sight distance
+            minDist = maxDist # is maximum sight distance
             minObj = self.void
             ray = self.agent.getRay(theta)
             for o in self.objects:
@@ -208,7 +210,7 @@ class BallWorld:
                 if 0 <= t <= minDist:
                     minDist = t
                     minObj = o
-            data += [minDist]+minObj.color
+            data += [minDist/maxDist]+minObj.color
             minDists.append(minDist)
         self.lastMinray = minDists
         return np.float32(data)
@@ -223,18 +225,18 @@ class BallWorld:
             self.agent.orientation -= np.pi / 16
         #if 1:
         elif a == 'f':
-            r,b = self.agent.moveForward(0.2)
+            r,b = self.agent.moveForward(0.8)
             for i in b:
                 i.x = self.r()
                 i.y = self.r()
             return r
         if a != 'f':
-            r,b = self.agent.moveForward(0.5)
+            r,b = self.agent.moveForward(0.2)
             for i in b:
                 i.x = self.r()
                 i.y = self.r()
             return r
-        return -0.05 # we don't want the agent to stay in place too long
+            return 0#-0.05 # we don't want the agent to stay in place too long
 
 
     def setupVisual(self):

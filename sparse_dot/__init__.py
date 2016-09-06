@@ -3,7 +3,7 @@ import theano.tensor as T
 
 if 'cpu' in theano.config.device:
     sparse_trick = True
-    from cpu_gemm import Gemm_ss, Gemm_sf, Gemm_fs
+    from .cpu_gemm import Gemm_ss, Gemm_sf, Gemm_fs
 
     def sparse_dot(a, amask, b, omask, c, block_size):
         if sparse_trick:
@@ -27,8 +27,8 @@ if 'cpu' in theano.config.device:
 elif 'gpu' in theano.config.device:
     # so I updated theano and it broke the GPU implementation...
     # I don't have the time to go through it now but I will soon
-    sparse_trick = False
-    from gpu_gemm import _GPUSparseDot_SparseBySparse
+    sparse_trick = True
+    from .gpu_gemm import _GPUSparseDot_SparseBySparse
 
     def sparse_dot(a, amask, b, omask, c, block_size):
         

@@ -437,8 +437,8 @@ if __name__ == "__main__":
     bs = 32
     n,m,p = 64,1024,1024
 
-    print (n,m,p),bs
-    print "All these numbers should be 0, or close to 0:"
+    print((n,m,p),bs)
+    print("All these numbers should be 0, or close to 0:")
 
     import numpy
     A = T.matrix('a')
@@ -469,13 +469,13 @@ if __name__ == "__main__":
     for i in range(10):
         z,zt,zfs,zfst,zsf,zsft = f(a,b,am,bm,c)
         if i == 0:
-            print abs(z-zt).mean(),abs(zsf-zsft).mean(),abs(zfs-zfst).mean()
+            print(abs(z-zt).mean(),abs(zsf-zsft).mean(),abs(zfs-zfst).mean())
         if abs(z-zt).mean() > 0.0001 or abs(zfs-zfst).mean() > 0.0001 or abs(zsf-zsft).mean() > 0.0001:
-            print abs(z-zt).sum(), abs(z-zt).mean()
-            print abs(zfs-zfst).sum(), abs(zfs-zfst).mean()
-            print abs(zsf-zsft).sum(), abs(zsf-zsft).mean()
-            print z
-            print zt
+            print(abs(z-zt).sum(), abs(z-zt).mean())
+            print(abs(zfs-zfst).sum(), abs(zfs-zfst).mean())
+            print(abs(zsf-zsft).sum(), abs(zsf-zsft).mean())
+            print(z)
+            print(zt)
             raise Exception("Something seems off")
             
             
@@ -487,12 +487,12 @@ if __name__ == "__main__":
 
     zsf,zsft = fsf(a,b,am,c)
     
-    print abs(zsf-zsft).mean()
+    print(abs(zsf-zsft).mean())
     if abs(zsf-zsft).mean() > 0.0001: 
-        print b.shape
-        print abs(zsf-zsft).sum(), abs(zsf-zsft).mean()
-        print zsf
-        print zsft
+        print(b.shape)
+        print(abs(zsf-zsft).sum(), abs(zsf-zsft).mean())
+        print(zsf)
+        print(zsft)
         raise Exception("Something seems off")
         
 
@@ -537,23 +537,23 @@ if __name__ == "__main__":
     grads = f(a,b,am,bm,c)
     
     for i in range(3):
-        print abs(grads[i]-grads[i+3]).mean()
+        print(abs(grads[i]-grads[i+3]).mean())
         if abs(grads[i]-grads[i+3]).mean() > 0.0001:
             raise Exception("Something seems off")
 
     grads = ffs(a,b,bm,c)
 
     for i in range(3):
-        print abs(grads[i]-grads[i+3]).mean()
+        print(abs(grads[i]-grads[i+3]).mean())
         if abs(grads[i]-grads[i+3]).mean() > 0.0001:
             raise Exception("Something seems off")
 
     grads = fsf(a,b,am,c)
 
     for i in range(3):
-        print abs(grads[i]-grads[i+3]).mean()
+        print(abs(grads[i]-grads[i+3]).mean())
         if abs(grads[i]-grads[i+3]).mean() > 0.0001:
-            print i, abs(grads[i]-grads[i+3]).mean()
+            print(i, abs(grads[i]-grads[i+3]).mean())
             raise Exception("Something seems off")
 
     # misaligned sparsefull
@@ -570,9 +570,7 @@ if __name__ == "__main__":
 
 
     for i in range(3):
-        print abs(grads[i]-grads[i+3]).mean()
+        print(abs(grads[i]-grads[i+3]).mean())
         if abs(grads[i]-grads[i+3]).mean() > 0.0001:
-            print i, abs(grads[i]-grads[i+3]).mean()
+            print(i, abs(grads[i]-grads[i+3]).mean())
             raise Exception("Something seems off")
-
-    

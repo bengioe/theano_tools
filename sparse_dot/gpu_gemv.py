@@ -448,7 +448,7 @@ __global__ void outer_fs(
         }
         """ % locals()
         except Exception,e:
-            print e
+            print(e)
             import traceback
             traceback.print_exc()
         return s
@@ -462,13 +462,13 @@ def local_inplace_fs_outer(node):
         return
     if node.op.scalar_op == theano.scalar.add:
         if node.inputs[0].owner and isinstance(node.inputs[0].owner.op, _FSOuter):
-            print "Found",node
+            print("Found",node)
             own = node.inputs[0].owner
             if own.op.inplace: return
             inputs = own.inputs+[node.inputs[1],own.op.block_size]
             return [_FSOuter(True)(*inputs)]
         if node.inputs[1].owner and isinstance(node.inputs[1].owner.op, _FSOuter):
-            print "Found",node
+            print("Found",node)
             raise "ImplementMe!"
 
 @theano.sandbox.cuda.opt.register_opt()
@@ -479,13 +479,13 @@ def testopt(node):
     if isinstance(node.op, theano.sandbox.cuda.GpuElemwise) and \
        node.op.scalar_op == theano.scalar.add:
         if node.inputs[0].owner and isinstance(node.inputs[0].owner.op, SSGemv_Rect):
-            print "Found",node
+            print("Found",node)
             own = node.inputs[0].owner
             if own.op.inplace: return
             inputs = own.inputs+[node.inputs[1]]
             return [SSGemv_Rect(own.op.block_size,inplace=True,do_rect=own.op.do_rect)(*inputs)]
         if node.inputs[1].owner and isinstance(node.inputs[1].owner.op, SSGemv_Rect):
-            print "Found",node
+            print("Found",node)
             own = node.inputs[1].owner
             if own.op.inplace: return
             inputs = own.inputs+[node.inputs[0]]
@@ -504,8 +504,8 @@ if __name__ == "__main__" and 0:
     e_ = T.outer(a,b) + d
     f = theano.function([a,b,c], [e,e_],allow_input_downcast=True)
     r = f([1,2,3],[1,2,3],numpy.eye(3))
-    print r[0]
-    print r[1]
+    print(r[0])
+    print(r[1])
 
 
 if __name__ == "__main__" and 0:
@@ -529,7 +529,7 @@ if __name__ == "__main__" and 0:
     rate = 0.250
     n = 4096
     m = 4096
-    print n / bs * rate
+    print(n / bs * rate)
 
     a = T.vector('a')
     am = T.vector('am')
@@ -565,8 +565,8 @@ if __name__ == "__main__" and 0:
     
     c,d = f([1,2], [[1,2,3,4],[4,5,6,7]], [1],[1,1])
 
-    print c
-    print d
+    print(c)
+    print(d)
 
 
 if __name__ == "__main__":
@@ -585,14 +585,14 @@ if __name__ == "__main__":
         x,y= f([1,-2,-3,4],[1,0],
                [[1,2],[3,-4],[5,6],[7,-8]],[1],
                [1,4])
-        print x
-        print y
+        print(x)
+        print(y)
 
     bs = 64
     rate = 0.250
     n = 4096
     m = 4096
-    print n / bs * rate
+    print(n / bs * rate)
 
     a = T.vector('a')
     am = T.vector('am')
@@ -615,8 +615,8 @@ if __name__ == "__main__":
         x,y = f(numpy.random.random(n) - 0.5, rbin(n / bs), rbin(m / bs),
                 numpy.random.random(m) - 0.5)
     t1 = time.time()
-    print abs(x-y).sum(),abs(x).sum(),abs(y).sum()
-    print t1-t0
+    print(abs(x-y).sum(),abs(x).sum(),abs(y).sum())
+    print(t1-t0)
 
 
     grads = T.grad(o.sum(), [a,c,b])
@@ -634,6 +634,6 @@ if __name__ == "__main__":
         gs = f(numpy.random.random(n) - 0.5, rbin(n / bs), rbin(m / bs),
                numpy.random.random(m) - 0.5)
     for i,j in zip(gs[:3],gs[3:]):
-        print abs(i-j).sum(),abs(i).sum(),abs(j).sum()
+        print(abs(i-j).sum(),abs(i).sum(),abs(j).sum())
     t1 = time.time()
-    print t1-t0
+    print(t1-t0)

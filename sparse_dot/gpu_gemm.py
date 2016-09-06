@@ -176,7 +176,7 @@ class _GPUSparseDot_SparseBySparse(theano.sandbox.cuda.GpuOp):
         indexes,indexes_data = DualMatrixNonzero()(Omask)            
             
         if indexes.dtype!='float32':
-            print "?"
+            print("?")
             indexes = T.cast(indexes, 'float32')
         if A.dtype!='float32':
             A = T.cast(A, 'float32')
@@ -801,8 +801,8 @@ if __name__ == '__main__':
     m = blocksize*32*4
     t = blocksize*32*4
 
-    print (n,m,t),blocksize
-    print "All these numbers should be 0 or close to 0:"
+    print((n,m,t),blocksize)
+    print("All these numbers should be 0 or close to 0:")
 
 
     z = _GPUSparseDot_SparseBySparse(blocksize)(a,am,b,om,c)
@@ -819,7 +819,7 @@ if __name__ == '__main__':
     z,p = f(a,am,b,om,c)
 
     q = abs(z-p)
-    print q.min(), q.max(), q.mean()
+    print(q.min(), q.max(), q.mean())
     
 
 
@@ -850,5 +850,4 @@ if __name__ == '__main__':
 
     for i in range(3):
         q = abs(grads[i]-grads[i+3])
-        print q.min(),q.max(), q.mean()
-
+        print(q.min(),q.max(), q.mean())
