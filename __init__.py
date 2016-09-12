@@ -76,9 +76,14 @@ class GenericClassificationDataset:
             self.load_svhn()
         elif which == "covertype":
             self.load_covertype()
+        elif which == 'custom':
+            self.load_custom()
         else:
             raise ValueError("Don't know about this dataset: '%s'"%which)
 
+    def load_custom(self):
+        p = self.alt_path
+        self.train,self.valid,self.test = pickle.load(gzip.open(p,'r'))
 
 
     def makeDatasetForClasses(self, cs, doCorrectYs=True):

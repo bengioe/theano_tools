@@ -121,7 +121,7 @@ class SharedGenerator:
         #print("init",name,shape,init,kwargs)
         if type(init).__module__ == numpy.__name__: # wtf numpy
             values = init
-        elif init == "uniform" or init == "glorot":
+        elif init == "uniform" or init == "glorot" or init == 'tanh':
             k = numpy.sqrt(6./numpy.sum(shape)) if 'k' not in kwargs else kwargs['k']
             values = numpy.random.uniform(-k,k,shape)
         elif init == "bengio" or init == 'relu':
@@ -321,7 +321,7 @@ class ConvLayer:
     def __init__(self, filter_shape, #image_shape,
                  activation = lambda x:x,
                  use_bias=True,
-                 init="glorot",
+                 init="bengio",
                  inputDropout=None,
                  normalize=False,
                  mode="valid",

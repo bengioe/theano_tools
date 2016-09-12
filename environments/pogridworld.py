@@ -24,6 +24,12 @@ class POGridworld:
             r += self.crm[colorat]
         return r
 
+    def getfullobs(self):
+        n = numpy.prod(self.grid.shape)
+        o = numpy.zeros((n,self.ncolors),'float32')
+        o[n, self.grid.flatten()] = 1
+        return o.flatten()
+
     def getobs_square(self,radius=1):
         n = radius*2+1
         o = numpy.zeros((n*n,self.ncolors),'float32')
