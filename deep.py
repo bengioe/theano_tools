@@ -491,6 +491,9 @@ class StackModel:
         self.layers = layers
         self.params = set()
 
+    def apply(self, *x,**kw):
+        return self.__call__(*x,**kw)
+
     def __call__(self, *x, **kw):
         activations = kw.get('activations', None)
         upto = kw.get('upto', len(self.layers))

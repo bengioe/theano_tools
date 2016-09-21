@@ -3,7 +3,7 @@ import numpy
 
 
 def smooth_fill(pts, N = 40, label=None,
-                edgecolor='#1b2acc', facecolor='#1b10aa'):
+                edgecolor='#1b2acc', facecolor='#1b10aa',plotPts=True):
     # N is the number of bins
     # n is the number of points per bin
     n = len(pts) / N
@@ -11,7 +11,7 @@ def smooth_fill(pts, N = 40, label=None,
     means = numpy.mean(npts, axis=0)
     std = numpy.std(npts, axis=0)
     Npts = len(pts)
-    if len(pts) < 1000000:
+    if len(pts) < 1000000 and plotPts:
         pp.plot(pts,alpha=0.15)
 
     below = means-std
@@ -20,10 +20,10 @@ def smooth_fill(pts, N = 40, label=None,
     pp.fill_between(numpy.linspace(0,Npts,len(means)), below, above,
                     alpha=0.2,edgecolor=edgecolor,facecolor=facecolor,antialiased=True)
 
-    if len(pts) < 1000000:
-        pp.gca().set_ylim([numpy.min(pts[-len(pts)/2:]), numpy.max(pts[-len(pts)/2:])])
-    else:
-        pp.gca().set_ylim([numpy.min(below[-len(below)/2:]), numpy.max(above[-len(above)/2:])])
+    #if len(pts) < 1000000:
+    #    pp.gca().set_ylim([numpy.min(pts[-len(pts)/2:]), numpy.max(pts[-len(pts)/2:])])
+    #else:
+    #    pp.gca().set_ylim([numpy.min(below[-len(below)/2:]), numpy.max(above[-len(above)/2:])])
 
 def smooth(pts, plotPts=False, N = 200, label=None, setLims=False, **kwargs):
     # N is the number of bins

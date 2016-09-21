@@ -29,7 +29,7 @@ def isFileMoreRecentThan(a,b):
     return True
 
 def ls(p, where=lambda x: True):
-    return [os.path.join(p, i) for i in os.listdir(p) if where(i)]
+    return [os.path.join(p, i) for i in os.listdir(p) if where(os.path.join(p,i))]
 
 def lsdirs(p, where=lambda x: True):
     paths = ls(p)
