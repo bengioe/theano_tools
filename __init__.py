@@ -248,15 +248,27 @@ class GenericClassificationDataset:
                           self.test[1][i*minibatch_size:(i+1)*minibatch_size])
 
 
+    def runEpoch(self, train, minibatch_size=32):
+        return self.runMetaEpoch(
+            train,
+            self.trainMinibatches(minibatch_size),
+            self.train[0].shape[0])
+        
     def validate(self, test, minibatch_size=32):
-        cost = 0.0
-        error = 0.0
-        for x,y in self.validMinibatches(minibatch_size):
-            c,e = test(x,y)
-            cost += c
-            error += e
-        return (error / self.valid[0].shape[0],
-                cost /  self.valid[0].shape[0])
+        return self.runMetaEpoch(
+            test,
+            self.validMinibatches(minibatch_size),
+            self.valid[0].shape[0])
+        
+    def runMetaEpoch(self, func, generator, n):
+        stats = None
+        for args in generator:
+            rval = func(*args)
+            if stats is None:
+                stats = map(numpy.array,rval)
+            else:
+                stats = [i+j for i,j in zip(stats, rval)]
+        return [i / float(n) for i in stats]
 
     def doTest(self, test, minibatch_size=32):
         cost = 0.0

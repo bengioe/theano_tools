@@ -232,6 +232,11 @@ class ConvBatchNormalization:
 class HiddenLayer:
     def __init__(self, n_in, n_out, activation, init="glorot", canReconstruct=False,
                  inputDropout=None,name="",outputBatchNorm=False):
+        """
+        Typical a(Wx+b) hidden layer.
+        
+        Will init differently given inputDropout
+        """
         self.W = shared("W"+name, (n_in, n_out), init, inputDropout=inputDropout)
         self.b = shared("b"+name, (n_out,), "zero")
         self.activation = activation

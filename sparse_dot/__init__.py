@@ -25,7 +25,7 @@ if 'cpu' in theano.config.device:
             return T.dot(a,b)+c
 
 elif 'gpu' in theano.config.device:
-    # so I updated theano and it broke the GPU implementation...
+    # so I updated theano and it broke the GPU implementation... maybe?
     # I don't have the time to go through it now but I will soon
     sparse_trick = True
     from .gpu_gemm import _GPUSparseDot_SparseBySparse
